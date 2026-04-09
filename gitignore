@@ -1,0 +1,47 @@
+# ===== Python 환경 =====
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# pip / setuptools / wheel
+*.egg-info/
+*.egg
+dist/
+build/
+
+# env 파일 (비밀 키 등)
+.env
+
+# ===== OS별 잡파일 =====
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ===== VS Code =====
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/*.code-workspace
+
+# ===== Jupyter / IPython =====
+.ipynb_checkpoints
+
+# ===== PyCharm / JetBrains =====
+.idea/
+
+# ===== Logs =====
+*.log
+
+app/ai/model/cc.ko.300.bin
