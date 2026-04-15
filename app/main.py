@@ -11,3 +11,4 @@ app.include_router(leximatch_router)
 def startup_event():
     print("서버 시작! Service 통해 모델 미리 로드")
     load_model_service()
+    

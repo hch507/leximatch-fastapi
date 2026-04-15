@@ -2,6 +2,22 @@ import numpy as np
 from app.ai.model_loader import load_model
 from app.model.similarity_result_entity import SimilarityResult
 
+_NEAREST_CACHE = {}
+def get_nearest_cached( target_word: str, topn: int):
+    model = load_model()
+    key = target_word
+    print("유사단어 캐싱...")
+    if key not in _NEAREST_CACHE:
+        nearest = model.get_nearest_neighbors(target_word, k=topn)
+        rank_map = {word: i + 1 for i, (_, word) in enumerate(nearest)}
+
+        _NEAREST_CACHE[key] = {
+            "nearest": nearest,
+            "rank_map": rank_map
+        }
+    print("유사단어 캐싱 완료")
+    return _NEAREST_CACHE[key]
+
 
 def cosine_similarity(vec1, vec2):
     return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
@@ -11,27 +27,28 @@ def compute_similarity_score(target_word: str, predicted_word: str, topn: int = 
     try:
         # 모델 로드 (이미 로드되어 있으면 재사용)
         model = load_model()
-
+        print("STEP 1")  # 추가
         # 단어 벡터 가져오기
         vec1 = model.get_word_vector(target_word)
         vec2 = model.get_word_vector(predicted_word)
 
         # 코사인 유사도 계산
         similarity = cosine_similarity(vec1, vec2)
-
+        print("STEP 2")  # 추가
         # 점수 변환 (-1 ~ 1 → -100 ~ 100)
         similarity_score =  str(round(similarity * 100, 2))
 
         # 유사한 단어 목록에서 ranking 찾기
-        nearest = model.get_nearest_neighbors(target_word, k=topn)
-
-        ranking = next(
-            (i + 1 for i, (sim, word) in enumerate(nearest) if word == predicted_word),
-            None
-        )
+        nearest = get_nearest_cached(target_word, topn)
+        print("STEP 3")  # 추가
+        ranking = nearest["rank_map"].get(predicted_word)
+        print("STEP 4")  # 추가
         print(f"Predicted word: {predicted_word}, Ranking: {ranking}")
         
-        return SimilarityResult(similarity_score=similarity_score, ranking=str(ranking))
+        return SimilarityResult(similarity_score=similarity_score, ranking=str(ranking) )
 
     except Exception as e:
+         print("ERROR OCCURED:", e)
          raise e
+
+
