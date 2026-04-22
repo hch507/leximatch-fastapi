@@ -3,15 +3,12 @@ from typing import Generic, TypeVar, Optional
 
 T = TypeVar("T")
 
-class ApiError(BaseModel):
-    code: str
-    message: str
+class Result(BaseModel):
+    resultCode: int
+    resultMessage: str
+    resultDescription: str
 
-class Payload(BaseModel, Generic[T]):
-    data: Optional[T] = None
-    error: Optional[ApiError] = None
+class Api(BaseModel, Generic[T]):
+    result : Result
+    body: Optional[T]
 
-class CommonResult(BaseModel, Generic[T]):
-    resultCode: str
-    resultMsg: str
-    payload: Payload[T]
