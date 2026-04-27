@@ -1,6 +1,8 @@
 # from fastapi import HTTPException
 from app.ai.model_loader import load_model
 from app.ai.similarity import compute_similarity_score, get_nearest_cached
+from app.ai.similarity_in_vector import compute_similarity_score_in_vector
+from app.ai.vector_loader import load_vectors
 from app.core.exceptions.exceptions import InternalServerException, ValidationException
 from app.model.total_result_entity import TatalResult
 
@@ -10,6 +12,11 @@ from app.model.total_result_entity import TatalResult
 def load_model_service():
     """Service에서 모델 로드 호출"""
     load_model()
+    
+def load_vector_service():
+    """Service에서 vector 로드 호출"""
+    load_vectors()
+
 
     
 
@@ -20,7 +27,7 @@ def get_similarity_result(keyword: str, userInput: str):
     
     
     try:
-        result = compute_similarity_score(keyword, userInput)
+        result = compute_similarity_score_in_vector(keyword, userInput)
 
         return TatalResult(
             keyword=keyword,

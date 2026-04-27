@@ -16,6 +16,14 @@ def get_nearest_cached( target_word: str, topn: int):
             "rank_map": rank_map
         }
     print("유사단어 캐싱 완료")
+    
+    print(f"\n[{target_word}] 유사단어 TOP {topn}", flush=True)
+
+    for i, (score, word) in enumerate(nearest, start=1):
+        print(
+            f"{i:4d}위 | {word:<20} | score={score:.4f}",
+            flush=True
+        )
     return _NEAREST_CACHE[key]
 
 
