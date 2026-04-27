@@ -44,4 +44,7 @@ $RECYCLE.BIN/
 # ===== Logs =====
 *.log
 
-app/ai/model/cc.ko.300.bin
+app/ai/model/*.npy
+app/ai/model/*.pkl
+app/ai/model/*.bin
+app/ai/model/*.vec
