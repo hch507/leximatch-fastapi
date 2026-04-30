@@ -1,4 +1,5 @@
 import fasttext
+from app.core.error.error_code import ErrorCode
 
 from app.core.exceptions.exceptions import InternalServerException 
 model_path = "app/ai/model/cc.ko.300.bin"
@@ -14,4 +15,4 @@ def load_model():
             print("모델 로딩 완료")
         return ft_model
     except Exception:
-       raise InternalServerException("모델 로딩 실패")
+       raise InternalServerException(ErrorCode.MODEL_LOAD_FAIL,"모델 로딩 실패")

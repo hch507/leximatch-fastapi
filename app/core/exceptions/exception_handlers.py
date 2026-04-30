@@ -11,39 +11,41 @@ def register_exception_handlers(app):
     @app.exception_handler(ServiceException)
     def service_exception_handler(request: Request, exc: ServiceException):
         return JSONResponse(
-            status_code=exc.code,
+            status_code=exc.http_status,
             content=Api(
                 result=Result(
                     resultCode=exc.code,
-                    resultMessage="ERROR",
-                    resultDescription=exc.message
+                    resultMessage=exc.message,
+                    resultDescription=exc.description
                 ),
                 body=None
             ).dict()
         )
-        
+
     @app.exception_handler(HTTPException)
     def http_exception_handler(request: Request, exc: HTTPException):
         return JSONResponse(
             status_code=exc.status_code,
             content=Api(
                 result=Result(
-                    resultCode=str(exc.status_code),
-                    resultMessage="ERROR",
-                    resultDescription=exc.detail
+                    resultCode=exc.status_code,
+                    resultMessage="HTTP_ERROR",
+                    resultDescription=str(exc.detail)
                 ),
                 body=None
             ).dict()
         )
+
     
+    @app.exception_handler(Exception)
     def global_exception_handler(request: Request, exc: Exception):
         return JSONResponse(
-            status_code=500,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content=Api(
                 result=Result(
-                    resultCode="500",
-                    resultMessage="ERROR",
-                    resultDescription=str(exc)
+                    resultCode=ErrorCode.INTERNAL_SERVER_ERROR.code,
+                    resultMessage=ErrorCode.INTERNAL_SERVER_ERROR.message,
+                    resultDescription="서버 오류가 발생했습니다"
                 ),
                 body=None
             ).dict()
