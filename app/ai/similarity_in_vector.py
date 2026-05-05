@@ -47,9 +47,6 @@ def get_nearest_cached_in_vector(target_word: str, topn: int):
 
         print("유사단어 캐싱 생성 완료", flush=True)
         
-        print(f"\n[{target_word}] 유사단어 TOP {topn}")
-        for i, (score, word) in enumerate(nearest, start=1):
-            print(f"{i:4d}위 | {word:<20} | score={score:.4f}")
 
     return _NEAREST_CACHE[key]
 
