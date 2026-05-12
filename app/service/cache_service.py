@@ -1,13 +1,14 @@
 
 from app.ai.similarity import get_nearest_cached
-from app.ai.similarity_in_vector import get_nearest_cached_in_vector
+from app.ai.similarity_in_vector import _NEAREST_CACHE, get_nearest_cached_in_vector
 from app.core.error.error_code import ErrorCode
 from app.core.exceptions.exceptions import InternalServerException, ServiceException
 
 
     
-def set_nearest_cache(target_word: str = "사과", topn: int = 1000):
+def set_nearest_cache(target_word: str , topn: int = 1000):
     try:
+        _NEAREST_CACHE.clear()
         get_nearest_cached_in_vector(target_word, topn)
         print(f"캐시 워밍 완료: {target_word}")
         
