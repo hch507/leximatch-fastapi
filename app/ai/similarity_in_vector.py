@@ -1,8 +1,9 @@
+import random
 import numpy as np
 from app.ai.vector_loader import load_vectors, get_word_vector
 from app.core.error.error_code import ErrorCode
 from app.model.similarity_result_entity import SimilarityResult
-
+from app.model.hint_result_entity import HintResult
 _NEAREST_CACHE = {}
 
 
@@ -49,6 +50,40 @@ def get_nearest_cached_in_vector(target_word: str, topn: int):
         
 
     return _NEAREST_CACHE[key]
+
+def get_random_hint_word(
+    target_word: str,
+    start_rank: int = 300,
+    end_rank: int = 700,
+    topn: int = 1000
+):
+    nearest_data = get_nearest_cached_in_vector(target_word, topn)
+
+    nearest = nearest_data["nearest"]
+    rank_map = nearest_data["rank_map"]
+
+    target_range = nearest[start_rank - 1:end_rank]
+
+    if not target_range:
+        return None
+
+    _, random_word = random.choice(target_range)
+
+    # 유사도 계산
+    vec1 = get_word_vector(target_word)
+    vec2 = get_word_vector(random_word)
+
+    similarity = float(np.dot(vec1, vec2))
+    similarity_score = str(round(similarity * 100, 2))
+
+    return HintResult(
+        word=random_word,
+        similarity_score=similarity_score,
+        ranking=str(rank_map[random_word])
+    )
+      
+        
+
 
 
 def compute_similarity_score_in_vector(target_word: str, predicted_word: str, topn: int = 1000):

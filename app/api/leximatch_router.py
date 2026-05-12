@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from app.model.common_result import Api, Result
 from app.service.cache_service import set_nearest_cache
 
-from app.service.similarity_service import get_similarity_result
+from app.service.similarity_service import get_hint_result, get_similarity_result
 
 router = APIRouter()
 
@@ -36,4 +36,16 @@ def set_cache(target_word : str):
             body = target_word
         )
 
-   
+
+@router.get("/hint")
+def get_hint(target_word:str):
+        result= get_hint_result(target_word)
+       
+        return Api(
+            result = Result(
+                resultCode=200,
+                resultMessage="OK",
+                resultDescription="success"
+            ),
+            body = result
+        )
