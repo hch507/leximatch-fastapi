@@ -78,7 +78,7 @@ def get_random_hint_word(
 
     return HintResult(
         word=random_word,
-        similarity_score=similarity_score,
+        dist=similarity_score,
         ranking=str(rank_map[random_word])
     )
       
