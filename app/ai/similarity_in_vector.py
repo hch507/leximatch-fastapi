@@ -9,7 +9,7 @@ _NEAREST_CACHE = {}
 
 def get_nearest_cached_in_vector(target_word: str, topn: int):
     key = f"{target_word}:{topn}"
-
+    print(f"[캐시 조회] key={key}, cache_keys={list(_NEAREST_CACHE.keys())}", flush=True)
     if key not in _NEAREST_CACHE:
         print("유사단어 캐싱 생성 중...", flush=True)
 
@@ -68,6 +68,11 @@ def get_random_hint_word(
         return None
 
     _, random_word = random.choice(target_range)
+    
+    print(
+        f"[힌트] target={target_word}, hint_word={random_word}, rank={rank_map[random_word]}",
+        flush=True
+    )
 
     # 유사도 계산
     vec1 = get_word_vector(target_word)
@@ -99,7 +104,10 @@ def compute_similarity_score_in_vector(target_word: str, predicted_word: str, to
     ranking = nearest["rank_map"].get(predicted_word)
 
 
-    print(f"Predicted word: {predicted_word}, Ranking: {ranking}", flush=True)
+    print(
+        f"[직접검색] target={target_word}, input={predicted_word}, rank={ranking}",
+        flush=True
+    )
 
     return SimilarityResult(
         similarity_score=similarity_score,
