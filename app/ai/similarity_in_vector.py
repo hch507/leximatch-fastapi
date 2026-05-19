@@ -2,14 +2,22 @@ import random
 import numpy as np
 from app.ai.vector_loader import load_vectors, get_word_vector
 from app.core.error.error_code import ErrorCode
+from app.core.filter.word_filter import is_korean_word
 from app.model.similarity_result_entity import SimilarityResult
 from app.model.hint_result_entity import HintResult
 _NEAREST_CACHE = {}
 
 
+
+
 def get_nearest_cached_in_vector(target_word: str, topn: int):
     key = f"{target_word}:{topn}"
-    print(f"[캐시 조회] key={key}, cache_keys={list(_NEAREST_CACHE.keys())}", flush=True)
+
+    print(
+        f"[캐시 조회] key={key}, cache_keys={list(_NEAREST_CACHE.keys())}",
+        flush=True
+    )
+
     if key not in _NEAREST_CACHE:
         print("유사단어 캐싱 생성 중...", flush=True)
 
@@ -18,24 +26,33 @@ def get_nearest_cached_in_vector(target_word: str, topn: int):
         target_vec = get_word_vector(target_word)
 
         scores = vectors @ target_vec
-        top_indices = np.argsort(-scores)[:topn + 1]
+
+        # 전체 정렬
+        sorted_indices = np.argsort(-scores)
 
         nearest = []
         rank_map = {}
 
         rank = 1
 
-        for idx in top_indices:
+        for idx in sorted_indices:
             word = words[idx]
 
             if word == target_word:
+                continue
+
+            # 한글 단어만 허용
+            if not is_korean_word(word):
                 continue
 
             score = float(scores[idx])
 
             nearest.append((score, word))
             rank_map[word] = rank
-
+            print(
+                f"[캐시 저장] rank={rank}, word={word}, score={round(score * 100, 2)}",
+                flush=True
+            )
             rank += 1
 
             if rank > topn:
@@ -46,15 +63,17 @@ def get_nearest_cached_in_vector(target_word: str, topn: int):
             "rank_map": rank_map
         }
 
-        print("유사단어 캐싱 생성 완료", flush=True)
-        
+        print(
+            f"유사단어 캐싱 생성 완료: {len(nearest)}개",
+            flush=True
+        )
 
     return _NEAREST_CACHE[key]
 
 def get_random_hint_word(
     target_word: str,
-    start_rank: int = 300,
-    end_rank: int = 700,
+    start_rank: int = 10,
+    end_rank: int = 200,
     topn: int = 1000
 ):
     nearest_data = get_nearest_cached_in_vector(target_word, topn)
@@ -69,11 +88,6 @@ def get_random_hint_word(
 
     _, random_word = random.choice(target_range)
     
-    print(
-        f"[힌트] target={target_word}, hint_word={random_word}, rank={rank_map[random_word]}",
-        flush=True
-    )
-
     # 유사도 계산
     vec1 = get_word_vector(target_word)
     vec2 = get_word_vector(random_word)
