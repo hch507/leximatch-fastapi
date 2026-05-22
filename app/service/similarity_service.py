@@ -49,8 +49,17 @@ def get_similarity_result(keyword: str, userInput: str):
         raise InternalServerException(ErrorCode.INTERNAL_SERVER_ERROR,f"유사도 계산 실패:")
 
 
-def get_hint_result(keyword: str):
+def get_hint_result(
+        keyword: str, 
+        min_rank: int,
+        max_rank: int
+    ):
     
+    print(
+        f"[힌트 요청] keyword={keyword}, "
+        f"min_rank={min_rank}, "
+        f"max_rank={max_rank}"
+    )
     if not keyword:
         raise ValidationException(
             ErrorCode.INVALID_INPUT,
@@ -60,6 +69,8 @@ def get_hint_result(keyword: str):
     try:
         result = get_random_hint_word(
             target_word=keyword,
+            start_rank=min_rank,
+            end_rank=max_rank
         )
 
         return result
