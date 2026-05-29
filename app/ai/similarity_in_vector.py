@@ -63,10 +63,6 @@ def get_nearest_cached_in_vector(target_word: str, topn: int):
             "rank_map": rank_map
         }
 
-        print(
-            f"유사단어 캐싱 생성 완료: {len(nearest)}개",
-            flush=True
-        )
 
     return _NEAREST_CACHE[key]
 
@@ -116,12 +112,6 @@ def compute_similarity_score_in_vector(target_word: str, predicted_word: str, to
     nearest = get_nearest_cached_in_vector(target_word, topn)
 
     ranking = nearest["rank_map"].get(predicted_word)
-
-
-    print(
-        f"[직접검색] target={target_word}, input={predicted_word}, rank={ranking}",
-        flush=True
-    )
 
     return SimilarityResult(
         similarity_score=similarity_score,
