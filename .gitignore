@@ -43,6 +43,8 @@ $RECYCLE.BIN/
 
 # ===== Logs =====
 *.log
+# ===== txt =====
+*.txt
 
 app/ai/model/*.npy
 app/ai/model/*.pkl
