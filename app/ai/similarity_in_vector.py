@@ -13,10 +13,6 @@ _NEAREST_CACHE = {}
 def get_nearest_cached_in_vector(target_word: str, topn: int):
     key = f"{target_word}:{topn}"
 
-    print(
-        f"[캐시 조회] key={key}, cache_keys={list(_NEAREST_CACHE.keys())}",
-        flush=True
-    )
 
     if key not in _NEAREST_CACHE:
         print("유사단어 캐싱 생성 중...", flush=True)
@@ -39,6 +35,9 @@ def get_nearest_cached_in_vector(target_word: str, topn: int):
             word = words[idx]
 
             if word == target_word:
+                continue
+
+            if target_word in word:
                 continue
 
             # 한글 단어만 허용
