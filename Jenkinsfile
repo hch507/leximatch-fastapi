@@ -8,11 +8,9 @@ pipeline {
             }
         }
 
-        stage('Check') {
+        stage('Docker Version') {
             steps {
-                sh 'echo "GitHub 연동 성공!"'
-                sh 'pwd'
-                sh 'ls -la'
+                sh 'docker --version'
             }
         }
     }
