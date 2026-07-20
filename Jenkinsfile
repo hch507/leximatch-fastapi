@@ -31,7 +31,7 @@ pipeline {
                       --name leximatch-fastapi \
                       --network leximatch-net \
                       -p 8000:8000 \
-                      -v /home/ubuntu/models:/app/app/ai/model \
+                      -v /home/ubuntu/model:/app/app/ai/model \
                       leximatch-fastapi
                 '''
             }
