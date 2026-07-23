@@ -30,6 +30,7 @@ pipeline {
                     docker run -d \
                       --name leximatch-fastapi \
                       --network leximatch-net \
+                      --restart unless-stopped \
                       -p 8000:8000 \
                       -v /home/ubuntu/model:/app/app/ai/model \
                       leximatch-fastapi
