@@ -18,7 +18,7 @@ pipeline {
                 sh '''
                     docker build -t leximatch-fastapi .
                 '''
-            
+            }
         }
     
         // stage('Deploy') {
