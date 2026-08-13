@@ -18,47 +18,53 @@ pipeline {
                 sh '''
                     docker build -t leximatch-fastapi .
                 '''
-            }
+            
         }
-
+    
         // stage('Deploy') {
         //     steps {
         //         sh '''
-        //             docker stop leximatch-fastapi || true
-        //             docker rm leximatch-fastapi || true
+        //             docker stop leximatch-fastapi-1 || true
+        //             docker rm leximatch-fastapi-1 || true
+        //             docker stop leximatch-fastapi-2 || true
+        //             docker rm leximatch-fastapi-2 || true
 
+        //             # FastAPI 1
         //             docker run -d \
-        //               --name leximatch-fastapi \
-        //               --network ai-net\
+        //               --name leximatch-fastapi-1 \
+        //               --network ai-net \
         //               --restart unless-stopped \
         //               -v /home/ubuntu/model:/app/app/ai/model \
-        //               leximatch-fastapi
+        //               leximatch-fastapi:latest
+
+        //             # FastAPI 2
+        //             docker run -d \
+        //               --name leximatch-fastapi-2 \
+        //               --network ai-net \
+        //               --restart unless-stopped \
+        //               -v /home/ubuntu/model:/app/app/ai/model \
+        //               leximatch-fastapi:latest
+
+        //             docker image prune -f
         //         '''
         //     }
         // }
+
         stage('Deploy') {
             steps {
                 sh '''
                     docker stop leximatch-fastapi-1 || true
                     docker rm leximatch-fastapi-1 || true
-                    docker stop leximatch-fastapi-2 || true
-                    docker rm leximatch-fastapi-2 || true
+             
 
                     # FastAPI 1
                     docker run -d \
                       --name leximatch-fastapi-1 \
                       --network ai-net \
                       --restart unless-stopped \
-                      -v /home/ubuntu/model:/app/app/ai/model \
+                      -v /home/ec2-user/models:/app/app/ai/model \
                       leximatch-fastapi:latest
 
-                    # FastAPI 2
-                    docker run -d \
-                      --name leximatch-fastapi-2 \
-                      --network ai-net \
-                      --restart unless-stopped \
-                      -v /home/ubuntu/model:/app/app/ai/model \
-                      leximatch-fastapi:latest
 
                     docker image prune -f
                 '''
