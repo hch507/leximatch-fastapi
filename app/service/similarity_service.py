@@ -1,4 +1,6 @@
 # from fastapi import HTTPException
+import random
+
 from app.ai.model_loader import load_model
 from app.ai.similarity import compute_similarity_score, get_nearest_cached
 from app.ai.similarity_in_vector import compute_similarity_score_in_vector, get_random_hint_word
@@ -6,6 +8,7 @@ from app.ai.vector_loader import load_vectors
 from app.core.error.error_code import ErrorCode
 from app.core.exceptions.exceptions import InternalServerException, ServiceException, ValidationException
 from app.model.total_result_entity import TatalResult
+from app.util.hint import extract_jamo
 
 
 
@@ -82,4 +85,34 @@ def get_hint_result(
         raise InternalServerException(
             ErrorCode.INTERNAL_SERVER_ERROR,
             "힌트 조회 실패"
+        )
+
+def get_initial_hint_result(keyword: str):
+
+    print(f"[글자 힌트 요청] keyword={keyword}")
+   
+    if not keyword:
+        raise ValidationException(
+            ErrorCode.INVALID_INPUT,
+            "keyword가 비어있습니다"
+        )
+
+    try:
+        jamos = extract_jamo(keyword)
+    
+        if not jamos:
+            raise ValidationException(
+                ErrorCode.INVALID_INPUT,
+                "한글 단어가 아닙니다"
+            )
+
+        return random.choice(jamos)
+
+    except ServiceException:
+        raise
+
+    except Exception:
+        raise InternalServerException(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "글자 힌트 조회 실패"
         )

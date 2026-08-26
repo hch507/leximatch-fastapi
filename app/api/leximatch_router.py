@@ -2,9 +2,10 @@ from fastapi import FastAPI
 from fastapi import APIRouter
 from app.model.common_result import Api, Result
 from app.model.request.hint_request import HintRequest
+from app.model.request.initial_hint_request import InitialHintRequest
 from app.service.cache_service import set_nearest_cache
 
-from app.service.similarity_service import get_hint_result, get_similarity_result
+from app.service.similarity_service import get_hint_result, get_initial_hint_result, get_similarity_result
 
 router = APIRouter()
 
@@ -56,6 +57,20 @@ def get_hint(request: HintRequest):
         keyword=request.answer,
         min_rank=request.min_rank,
         max_rank=request.max_rank,
+    )
+
+    return Api(
+        result=Result(
+            resultCode=200,
+            resultMessage="OK",
+            resultDescription="success"
+        ),
+        body=result
+    )
+@router.post("/initial-hint")
+def get_initial_hint(request: InitialHintRequest):
+    result = get_initial_hint_result(
+        keyword=request.answer
     )
 
     return Api(
