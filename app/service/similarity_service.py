@@ -7,6 +7,7 @@ from app.ai.similarity_in_vector import compute_similarity_score_in_vector, get_
 from app.ai.vector_loader import load_vectors
 from app.core.error.error_code import ErrorCode
 from app.core.exceptions.exceptions import InternalServerException, ServiceException, ValidationException
+from app.model.initial_hint_result_entity import InitialHintResult
 from app.model.total_result_entity import TatalResult
 from app.util.hint import extract_jamo
 
@@ -106,7 +107,10 @@ def get_initial_hint_result(keyword: str):
                 "한글 단어가 아닙니다"
             )
 
-        return random.choice(jamos)
+        return InitialHintResult(
+            initial=random.choice(jamos)
+        )
+
 
     except ServiceException:
         raise
