@@ -1,3 +1,6 @@
+
+import random
+
 CHOSUNG = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ"
 
 JUNGSUNG = [
@@ -15,24 +18,34 @@ JONGSUNG = [
 ]
 
 
+# def extract_jamo(word: str):
+#     result = []
+
+#     for char in word:
+#         if '가' <= char <= '힣':
+#             code = ord(char) - ord('가')
+
+#             chosung_index = code // 588
+#             jungsung_index = (code % 588) // 28
+#             jongsung_index = code % 28
+
+#             result.append(CHOSUNG[chosung_index])
+#             result.append(JUNGSUNG[jungsung_index])
+
+#             if jongsung_index != 0:
+#                 result.append(JONGSUNG[jongsung_index])
+
+#         else:
+#             result.append(char)
+
+#     return result
+
+
+
 def extract_jamo(word: str):
-    result = []
+    chars = [char for char in word if '가' <= char <= '힣']
 
-    for char in word:
-        if '가' <= char <= '힣':
-            code = ord(char) - ord('가')
+    if not chars:
+        return None
 
-            chosung_index = code // 588
-            jungsung_index = (code % 588) // 28
-            jongsung_index = code % 28
-
-            result.append(CHOSUNG[chosung_index])
-            result.append(JUNGSUNG[jungsung_index])
-
-            if jongsung_index != 0:
-                result.append(JONGSUNG[jongsung_index])
-
-        else:
-            result.append(char)
-
-    return result
+    return random.choice(chars)
