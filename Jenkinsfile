@@ -21,46 +21,46 @@ pipeline {
             }
         }
     
-        stage('Deploy') {
-            steps {
-                sh '''
-                    docker stop leximatch-fastapi-1 || true
-                    docker rm leximatch-fastapi-1 || true
-               
-
-                    # FastAPI 1
-                    docker run -d \
-                      --name leximatch-fastapi-1 \
-                      --network ai-net \
-                      --restart unless-stopped \
-                      -v /home/ubuntu/model:/app/app/ai/model \
-                      leximatch-fastapi:latest
-
-                    docker image prune -f
-                '''
-            }
-        }
-
         // stage('Deploy') {
         //     steps {
         //         sh '''
         //             docker stop leximatch-fastapi-1 || true
         //             docker rm leximatch-fastapi-1 || true
-             
+               
 
         //             # FastAPI 1
         //             docker run -d \
         //               --name leximatch-fastapi-1 \
         //               --network ai-net \
         //               --restart unless-stopped \
-        //               -v /home/ec2-user/models:/app/app/ai/model \
+        //               -v /home/ubuntu/model:/app/app/ai/model \
         //               leximatch-fastapi:latest
-
 
         //             docker image prune -f
         //         '''
         //     }
         // }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    docker stop leximatch-fastapi-1 || true
+                    docker rm leximatch-fastapi-1 || true
+             
+
+                    # FastAPI 1
+                    docker run -d \
+                      --name leximatch-fastapi-1 \
+                      --network ai-net \
+                      --restart unless-stopped \
+                      -v /home/ec2-user/models:/app/app/ai/model \
+                      leximatch-fastapi:latest
+
+
+                    docker image prune -f
+                '''
+            }
+        }
 
     }
 }
