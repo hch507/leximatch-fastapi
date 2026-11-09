@@ -15,4 +15,6 @@ def startup_event():
     load_vector_service()
     # load_model_service()
     
-    
+@app.get("/health")
+def health():
+    return {"status": "ok"}
